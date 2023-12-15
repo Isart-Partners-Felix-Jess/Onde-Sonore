@@ -157,24 +157,24 @@ public class UIManager : MonoBehaviour
             IntensityIn.text = newText;
     }
 
-    public void SetFrequencyText(float newFreq, bool isOutside)
+    public enum FrequencyDopplerState : int
+    {
+        None = 0,
+        Deep = 1,
+        High = 2
+    }
+
+    public void SetFrequencyText(float newFreq, FrequencyDopplerState dopplerState, bool isOutside)
     {
         string newText = "Fréquence perçue: " + newFreq.ToString() + " Hz";
 
-        if (newFreq >= 2000)
+        newText += dopplerState switch
         {
-            if (newFreq >= 20000)
-                newText += " (Ultrason)";
-            else
-                newText += " (Aiguë)";
-        }
-        else if (newFreq <= 200)
-        {
-            if (newFreq <= 20)
-                newText += " (Infrason)";
-            else
-                newText += " (Grave)";
-        }
+            FrequencyDopplerState.None => "",
+            FrequencyDopplerState.Deep => " (Aiguë)",
+            FrequencyDopplerState.High => " (Grave)",
+            _ => "Error",
+        };
 
         if (isOutside)
             FrequencyOut.text = newText;
