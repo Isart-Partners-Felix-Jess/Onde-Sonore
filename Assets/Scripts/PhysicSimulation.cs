@@ -88,28 +88,31 @@ public class PhysicSimulation : MonoBehaviour
         if (humanPositionX < FireTruck.position.x)
             return UIref.Frequency + DopplerDifference;
         else if (humanPositionX > FireTruck.position.x)
-            return UIref.Frequency + DopplerDifference;
+            return UIref.Frequency - DopplerDifference;
         //RARE CASE ==
         else
             return UIref.Frequency;
     }
 
-    private float ReceveivedIntensity(float distance)
+    private double ReceveivedIntensity(float distance)
     {
-        return UIref.Power / (4 * TAU * distance * distance);
+        return UIref.Power / (4f * Mathf.PI * distance * distance);
     }
 
-    private float IntensityToDbLevel(float intensity)
+    private float IntensityToDbLevel(double intensity)
     {
         //base intensity is 10e-12 so we invert it
-        float iBaseIntensity = (float)10e12;
-        return 10f * Mathf.Log(intensity * iBaseIntensity);
+        double iBaseIntensity = 1e12;
+        float result = 10f * Mathf.Log10((float)(intensity * iBaseIntensity));
+        return result;
     }
 
     public void PreCalculus()
     {
+
         DopplerDifference = ComputeDopplerDifference();
-        TransmissionCoef = 1f - Mathf.Pow((AirImpedance - UIref.Impedance / (AirImpedance + UIref.Impedance)), 2f);
+        float sqrtReflexionCoef = (AirImpedance - UIref.Impedance) / (AirImpedance + UIref.Impedance);
+        TransmissionCoef = 1f - (sqrtReflexionCoef * sqrtReflexionCoef); //Squared
         InvertedWaveLength = UIref.Frequency / SoundSpeed;
         SinusoidalXCoef = TAU * InvertedWaveLength;
     }
@@ -117,7 +120,7 @@ public class PhysicSimulation : MonoBehaviour
     private float ComputeDopplerDifference()
     {
         //We won't neglect the difference speed between the sound and the firetruck
-        return UIref.Frequency * UIref.TruckSpeed - (SoundSpeed - UIref.TruckSpeed);
+        return UIref.Frequency * UIref.TruckSpeed / (SoundSpeed - UIref.TruckSpeed);
     }
 
     private void Movements(float deltaTime)
