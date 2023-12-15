@@ -3558,6 +3558,7 @@ MonoBehaviour:
   FrequencyOut: {fileID: 447184396}
   IntensityIn: {fileID: 170635668}
   FrequencyIn: {fileID: 992957171}
+  WaveReverb: {fileID: 2008248078}
 --- !u!1 &1197233999
 GameObject:
   m_ObjectHideFlags: 0
@@ -5594,7 +5595,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Onde r\xE9verb\xE9r\xE9: "
+  m_text: "Onde r\xE9verb\xE9r\xE9: Non"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
