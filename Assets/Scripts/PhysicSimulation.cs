@@ -8,9 +8,11 @@ public class PhysicSimulation : MonoBehaviour
     [Header("Assets")]
     [SerializeField] private SpriteRenderer FireTruck = null;
 
-    [SerializeField] private SpriteRenderer Human = null;
+    [SerializeField] private Transform Human = null;
 
-    [SerializeField] private SpriteRenderer House = null;
+    [SerializeField] private Transform House = null;
+
+    [SerializeField] private Transform Window = null;
 
     [Header("Variables")]
     [SerializeField] private int EndOfSimulationOnX;
@@ -19,7 +21,7 @@ public class PhysicSimulation : MonoBehaviour
 
     private void Start()
     {
-        if (!FireTruck || !Human || !House || EndOfSimulationOnX == 0)
+        if (!FireTruck || !Human || !House || !Window || EndOfSimulationOnX == 0)
         {
             Debug.LogError("One or multiple field unset in PhysicSimulation");
 #if UNITY_EDITOR
@@ -38,7 +40,7 @@ public class PhysicSimulation : MonoBehaviour
         {
             Movements();
 
-            if (FireTruck.transform.localPosition.x >= EndOfSimulationOnX)
+            if (FireTruck.transform.position.x >= EndOfSimulationOnX)
             {
                 UIref.Reset();
                 Reset();
@@ -51,9 +53,9 @@ public class PhysicSimulation : MonoBehaviour
         FireTruck.transform.position += new Vector3(Time.deltaTime * UIref.TruckSpeed, 0f, 0f);
     }
 
-    private float GetDistance(SpriteRenderer obj1, SpriteRenderer obj2)
+    private float GetDistance(Transform obj1, Transform obj2)
     {
-        return (obj1.transform.position - obj2.transform.position).magnitude;
+        return (obj1.position - obj2.position).magnitude;
     }
 
     public void Reset()
