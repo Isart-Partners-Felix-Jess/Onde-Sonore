@@ -104,7 +104,7 @@ public class PhysicSimulation : MonoBehaviour
     public void PreCalculus()
     {
         dopplerDifference = DopplerDifference();
-        transmissionCoef = 1f - Mathf.Pow((airImpedance - UIref.Impedence / (airImpedance + UIref.Impedence)), 2f);
+        transmissionCoef = 1f - Mathf.Pow((airImpedance - UIref.Impedance / (airImpedance + UIref.Impedance)), 2f);
         invertedWaveLength = UIref.Frequence / soundSpeed;
         sinusoidalXCoef = TAU * invertedWaveLength;
     }
