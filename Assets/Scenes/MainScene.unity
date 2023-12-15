@@ -3299,12 +3299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LineRender: {fileID: 1171857153}
-  Points: 10
-  Amplitude: 1
-  Frequency: 1
-  Limits: {x: 0, y: 1}
-  MovementSpeed: 1
-  Radians: 2.19
+  Points: 200
+  Limits: {x: 0, y: 8}
 --- !u!120 &1171857153
 LineRenderer:
   serializedVersion: 2
@@ -3418,7 +3414,7 @@ Transform:
   m_GameObject: {fileID: 1171857151}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.5, y: -3.25, z: 0}
+  m_LocalPosition: {x: -13, y: -3.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4128,7 +4124,6 @@ RectTransform:
   m_Children:
   - {fileID: 170635667}
   - {fileID: 992957170}
-  - {fileID: 2008248077}
   m_Father: {fileID: 1171887732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4265,6 +4260,7 @@ RectTransform:
   m_Children:
   - {fileID: 384305192}
   - {fileID: 447184395}
+  - {fileID: 2008248077}
   m_Father: {fileID: 1171887732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5568,11 +5564,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1344493690}
+  m_Father: {fileID: 1541279606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.15002441, y: -104.7}
+  m_AnchoredPosition: {x: 429.8, y: -104.7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008248078
@@ -5595,7 +5591,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Onde r\xE9verb\xE9r\xE9: Non"
+  m_text: "Onde r\xE9verb\xE9r\xE9e\\n depuis la maison: D\xE9phas\xE9e"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5629,7 +5625,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0

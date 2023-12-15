@@ -4,7 +4,7 @@ using UnityEngine;
 public class PhysicSimulation : MonoBehaviour
 {
     private UIManager UIref;
-
+    private SineVisualisation SinVRef;
     [Header("Assets")]
     [SerializeField] private Transform FireTruck = null;
 
@@ -48,6 +48,7 @@ public class PhysicSimulation : MonoBehaviour
         }
 
         UIref = UIManager.Instance;
+        SinVRef = FindObjectOfType<SineVisualisation>();
         FireTruckAtStart = FireTruck.transform.position;
     }
 
@@ -66,11 +67,15 @@ public class PhysicSimulation : MonoBehaviour
             //Pressure gives the Amplitude
             //Here we Update it in real time
             SinusoidalAmplitude = Mathf.Sqrt(IntensityInside * AirImpedance);
-            
+            //Amplitude and frequency downscaled for visualisation
+            SinVRef.Draw(SinusoidalAmplitude * 0.01f, SinusoidalXCoef/* for precision here should be * 0.01f*/, SinusoidalTimeCoef * 0.01f);
+
             UIref.SetIntensityText(IntensityOutside, true);
             UIref.SetIntensityText(IntensityInside, false);
             UIref.SetFrequencyText(FrequencyHuman(HumanOut.position.x, DopplerDifference), true);
             UIref.SetFrequencyText(FrequencyHuman(HumanIn.position.x, DopplerDifference), false);
+
+            UIref.SetWaveRev(PhaseState());
 
             if (FireTruck.transform.position.x >= EndOfSimulationOnX)
             {
@@ -92,17 +97,21 @@ public class PhysicSimulation : MonoBehaviour
 
     private float FrequencyHuman(float humanPositionX, float DopplerDifference)
     {
-        if (humanPositionX < FireTruck.position.x)
+        const float TOLERANCE = 0.5f;
+        if (humanPositionX < FireTruck.position.x - TOLERANCE)
         {
+            //Plus aigu
             return UIref.Frequency + DopplerDifference;
         }
-        else if (humanPositionX > FireTruck.position.x)
+        else if (humanPositionX > FireTruck.position.x + TOLERANCE)
         {
+            //Plus grave
             return UIref.Frequency - DopplerDifference;
         }
-        //RARE CASE ==
+        //RARE CASE
         else
         {
+            //Comme la source
             return UIref.Frequency;
         }
     }
@@ -130,7 +139,26 @@ public class PhysicSimulation : MonoBehaviour
         SinusoidalXCoef = TAU * InvertedWaveLength;
         SinusoidalTimeCoef = TAU * UIref.Frequency;
     }
+    private UIManager.WaveReverbState PhaseState()
+    {
+        const float TOLERANCE = 0.1f; //10% to be easy to see
+        float totaDistance = GetDistance(FireTruck, Window) + GetDistance(FireTruck, Window);
+        float ratioDistanceWavelength = totaDistance * InvertedWaveLength;
+        float floatingPoint = ratioDistanceWavelength - Mathf.FloorToInt(ratioDistanceWavelength);
 
+        if (Mathf.Abs(floatingPoint) < TOLERANCE)
+        {
+            return UIManager.WaveReverbState.Phase;
+        }
+        if (Mathf.Abs(floatingPoint - 0.5f) < TOLERANCE)
+        {
+            return UIManager.WaveReverbState.Opposition;
+        }
+        else
+        {
+            return UIManager.WaveReverbState.None;
+        }
+    }
     private float ComputeDopplerDifference()
     {
         //We won't neglect the difference speed between the sound and the firetruck

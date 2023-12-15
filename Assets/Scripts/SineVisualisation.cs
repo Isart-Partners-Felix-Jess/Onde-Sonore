@@ -1,3 +1,4 @@
+using System.Drawing;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,17 +7,9 @@ public class SineVisualisation : MonoBehaviour
     [Header("Sine Wave")]
     [SerializeField] private LineRenderer LineRender = null;
 
-    [SerializeField] private int Points = 10;
+    [SerializeField] private int Points = 200;
 
-    [SerializeField] private float Amplitude = 1;
-
-    [SerializeField] private float Frequency = 1;
-
-    [SerializeField] private Vector2 Limits = new(0, 1);
-
-    [SerializeField] private float MovementSpeed = 1;
-
-    [SerializeField, Range(0, 2 * Mathf.PI)] private float Radians = 0;
+    [SerializeField] private Vector2 Limits = new(0, 100);
 
     private void Start()
     {
@@ -30,15 +23,9 @@ public class SineVisualisation : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        Draw();
-    }
-
-    private void Draw()
+    public void Draw(float Amplitude, float SinusoidalXCoef,float SinusoidalTimeCoef)
     {
         float xStart = Limits.x;
-        float Tau = 2 * Mathf.PI;
         float xFinish = Limits.y;
 
         LineRender.positionCount = Points;
@@ -46,7 +33,7 @@ public class SineVisualisation : MonoBehaviour
         {
             float progress = (float)currentPoint / (Points - 1);
             float x = Mathf.Lerp(xStart, xFinish, progress);
-            float y = Amplitude * Mathf.Sin((Tau * Frequency * x) + (Time.timeSinceLevelLoad * MovementSpeed));
+            float y = Amplitude * Mathf.Sin((SinusoidalXCoef * x) + (Time.timeSinceLevelLoad * SinusoidalTimeCoef));
             LineRender.SetPosition(currentPoint, new Vector3(x, y, 0));
         }
     }

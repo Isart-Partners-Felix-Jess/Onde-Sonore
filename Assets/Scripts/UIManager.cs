@@ -182,22 +182,22 @@ public class UIManager : MonoBehaviour
             FrequencyIn.text = newText;
     }
 
-    private enum WaveReverbState : int
+    public enum WaveReverbState : int
     {
         None = 0,
         Phase = 1,
         Opposition = 2
     }
 
-    public void SetWaveRev(int waveRev)
+    public void SetWaveRev(WaveReverbState waveRev)
     {
-        string newText = "Onde réverbéré: ";
+        string newText = "Onde réverbérée\n depuis la maison: ";
 
         newText += waveRev switch
         {
-            (int)WaveReverbState.None => "Non",
-            (int)WaveReverbState.Phase => "En Phase",
-            (int)WaveReverbState.Opposition => "En Opposition",
+            WaveReverbState.None => "Déphasée",
+            WaveReverbState.Phase => "En Phase",
+            WaveReverbState.Opposition => "En Opposition",
             _ => "Error",
         };
 
