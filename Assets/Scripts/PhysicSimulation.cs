@@ -5,6 +5,7 @@ public class PhysicSimulation : MonoBehaviour
 {
     private UIManager UIref;
     private SineVisualisation SinVRef;
+
     [Header("Assets")]
     [SerializeField] private Transform FireTruck = null;
 
@@ -131,7 +132,6 @@ public class PhysicSimulation : MonoBehaviour
 
     public void PreCalculus()
     {
-
         DopplerDifference = ComputeDopplerDifference();
         float sqrtReflexionCoef = (AirImpedance - UIref.Impedance) / (AirImpedance + UIref.Impedance);
         TransmissionCoef = 1f - (sqrtReflexionCoef * sqrtReflexionCoef); //Squared
@@ -139,6 +139,7 @@ public class PhysicSimulation : MonoBehaviour
         SinusoidalXCoef = TAU * InvertedWaveLength;
         SinusoidalTimeCoef = TAU * UIref.Frequency;
     }
+
     private UIManager.WaveReverbState PhaseState()
     {
         const float TOLERANCE = 0.1f; //10% to be easy to see
@@ -159,6 +160,7 @@ public class PhysicSimulation : MonoBehaviour
             return UIManager.WaveReverbState.None;
         }
     }
+
     private float ComputeDopplerDifference()
     {
         //We won't neglect the difference speed between the sound and the firetruck
@@ -178,5 +180,9 @@ public class PhysicSimulation : MonoBehaviour
     public void Reset()
     {
         FireTruck.transform.position = FireTruckAtStart;
+
+        DistanceOutside = DistanceInside = DopplerDifference =
+        TransmissionCoef = InvertedWaveLength = SinusoidalXCoef =
+        SinusoidalTimeCoef = SinusoidalAmplitude = 0f;
     }
 }
