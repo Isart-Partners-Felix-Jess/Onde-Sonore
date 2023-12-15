@@ -13,10 +13,10 @@ Choix de :
 - la puissance acoustique de l’onde sonore en W
 - l’impédance acoustique des fenêtres de la maison en Pa.s/m
 
-Affichage de(s) :
-- la fréquence perçue par les observateurs
+Affichage de :
+- la fréquence perçue par chacun des observateurs
 - la phase de l'onde incidente avec celle réverberée par la fenêtre, perçues par l'observateur extérieur
-- l'intensité reçue de la sirène par les observateurs
+- l'intensité reçue de la sirène par chacun des observateurs
 - l'onde sinusoïdale perçue par l'habitant (ralentie 100x par rapport à la réalité)
 
 ## Précisions
