@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class PhysicSimulation : MonoBehaviour
@@ -9,34 +8,35 @@ public class PhysicSimulation : MonoBehaviour
     [Header("Assets")]
     [SerializeField] private Transform FireTruck = null;
 
-    [SerializeField] private Transform Human = null;
+    [SerializeField] private Transform HumanOut = null;
 
-    [SerializeField] private Transform House = null;
+    [SerializeField] private Transform HumanIn = null;
 
     [SerializeField] private Transform Window = null;
 
     [Header("Variables")]
     [SerializeField] private int EndOfSimulationOnX;
 
-    [SerializeField] float airImpedance = 440f;
-    [SerializeField] float soundSpeed = 343f;
+    [SerializeField] private float AirImpedance = 440f;
+    [SerializeField] private float SoundSpeed = 343f;
 
     private Vector3 FireTruckAtStart; // Start pos is set in Editor
 
-    float distance1;
-    float distance2;
-    float dopplerDifference;
+    private float DistanceOutside;
+    private float DistanceInside;
+    private float DopplerDifference;
 
-    //Precalculated 
-    float transmissionCoef;
-    float invertedWaveLength;
-    float sinusoidalXCoef;
+    //Precalculated
+    private float TransmissionCoef;
+
+    private float InvertedWaveLength;
+    private float SinusoidalXCoef;
 
     private const float TAU = 2 * Mathf.PI;
 
     private void Start()
     {
-        if (!FireTruck || !Human || !House || !Window || EndOfSimulationOnX == 0)
+        if (!FireTruck || !HumanOut || !HumanIn || !Window || EndOfSimulationOnX == 0)
         {
             Debug.LogError("One or multiple field unset in PhysicSimulation");
 #if UNITY_EDITOR
@@ -56,14 +56,14 @@ public class PhysicSimulation : MonoBehaviour
             float deltaTime = Time.deltaTime;
             Movements(deltaTime);
 
-            distance1 = GetDistance(Human, FireTruck);
-            distance2 = GetDistance(House, FireTruck);
+            DistanceOutside = GetDistance(HumanOut, FireTruck);
+            DistanceInside = GetDistance(HumanIn, FireTruck);
 
-            LevelHuman1(distance1);
-            LevelHuman2(distance2);
-            FrequencyHuman(Human.position.x, dopplerDifference);
-            FrequencyHuman(House.position.x, dopplerDifference);
+            UIref.SetIntensityText(LevelHumanOutside(DistanceOutside), true);
+            UIref.SetIntensityText(LevelHumanInside(DistanceInside), false);
 
+            UIref.SetFrequencyText(FrequencyHuman(HumanOut.position.x, DopplerDifference), true);
+            UIref.SetFrequencyText(FrequencyHuman(HumanIn.position.x, DopplerDifference), false);
 
             if (FireTruck.transform.position.x >= EndOfSimulationOnX)
             {
@@ -73,47 +73,53 @@ public class PhysicSimulation : MonoBehaviour
         }
     }
 
-    private float LevelHuman1(float distance)
+    private float LevelHumanOutside(float distance)
     {
         return IntensityToDbLevel(ReceveivedIntensity(distance));
     }
-    private float LevelHuman2(float distance)
+
+    private float LevelHumanInside(float distance)
     {
-        return IntensityToDbLevel(transmissionCoef *  ReceveivedIntensity(distance));
+        return IntensityToDbLevel(TransmissionCoef * ReceveivedIntensity(distance));
     }
-    private float FrequencyHuman(float humanPositionX, float dopplerDifference)
+
+    private float FrequencyHuman(float humanPositionX, float DopplerDifference)
     {
         if (humanPositionX < FireTruck.position.x)
-            return UIref.Frequence + dopplerDifference;
+            return UIref.Frequency + DopplerDifference;
         else if (humanPositionX > FireTruck.position.x)
-            return UIref.Frequence + dopplerDifference;
+            return UIref.Frequency + DopplerDifference;
         //RARE CASE ==
         else
-            return UIref.Frequence;
+            return UIref.Frequency;
     }
+
     private float ReceveivedIntensity(float distance)
     {
         return UIref.Power / (4 * TAU * distance * distance);
     }
+
     private float IntensityToDbLevel(float intensity)
     {
         //base intensity is 10e-12 so we invert it
         float iBaseIntensity = (float)10e12;
         return 10f * Mathf.Log(intensity * iBaseIntensity);
     }
+
     public void PreCalculus()
     {
-        dopplerDifference = DopplerDifference();
-        transmissionCoef = 1f - Mathf.Pow((airImpedance - UIref.Impedance / (airImpedance + UIref.Impedance)), 2f);
-        invertedWaveLength = UIref.Frequence / soundSpeed;
-        sinusoidalXCoef = TAU * invertedWaveLength;
+        DopplerDifference = ComputeDopplerDifference();
+        TransmissionCoef = 1f - Mathf.Pow((AirImpedance - UIref.Impedance / (AirImpedance + UIref.Impedance)), 2f);
+        InvertedWaveLength = UIref.Frequency / SoundSpeed;
+        SinusoidalXCoef = TAU * InvertedWaveLength;
     }
 
-    private float DopplerDifference()
+    private float ComputeDopplerDifference()
     {
         //We won't neglect the difference speed between the sound and the firetruck
-        return UIref.Frequence * UIref.TruckSpeed - (soundSpeed - UIref.TruckSpeed);
+        return UIref.Frequency * UIref.TruckSpeed - (SoundSpeed - UIref.TruckSpeed);
     }
+
     private void Movements(float deltaTime)
     {
         FireTruck.position += new Vector3(deltaTime * UIref.TruckSpeed, 0f, 0f);
@@ -123,6 +129,7 @@ public class PhysicSimulation : MonoBehaviour
     {
         return (obj1.position - obj2.position).magnitude;
     }
+
     public void Reset()
     {
         FireTruck.transform.position = FireTruckAtStart;

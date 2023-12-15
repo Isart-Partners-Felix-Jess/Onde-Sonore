@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
 {
     // Singleton management
 
-    private static UIManager _instance;
+    private static UIManager _instance = null;
 
     public static UIManager Instance
     {
@@ -31,8 +31,10 @@ public class UIManager : MonoBehaviour
         _instance = this;
     }
 
+    private PhysicSimulation Physics;
+
     [Header("InputFields")]
-    [SerializeField] private TMP_InputField FrequenceInputField = null;
+    [SerializeField] private TMP_InputField FrequencyInputField = null;
 
     [SerializeField] private TMP_InputField TruckSpeedInputField = null;
 
@@ -41,19 +43,31 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_InputField PowerInputField = null;
 
     [Header("Buttons")]
-    [SerializeField] private Button StartButton;
+    [SerializeField] private Button StartButton = null;
 
-    [SerializeField] private Button PauseButton;
+    [SerializeField] private Button PauseButton = null;
 
-    [SerializeField] private Button ResetButton;
+    private TMP_Text PauseText = null;
 
-    private bool _start = false;
-    private bool _paused = false;
+    [SerializeField] private Button ResetButton = null;
+
+    [Header("Outside")]
+    [SerializeField] private TMP_Text IntensityOut = null;
+
+    [SerializeField] private TMP_Text FrequencyOut = null;
+
+    [Header("Inside")]
+    [SerializeField] private TMP_Text IntensityIn = null;
+
+    [SerializeField] private TMP_Text FrequencyIn = null;
+
+    private bool bStart = false;
+    private bool bPaused = false;
 
     private void Start()
     {
-        if (!FrequenceInputField || !TruckSpeedInputField || !ImpedanceInputField || !PowerInputField ||
-            !StartButton || !PauseButton || !ResetButton)
+        if (!FrequencyInputField || !TruckSpeedInputField || !ImpedanceInputField || !PowerInputField ||
+            !StartButton || !PauseButton || !ResetButton || !IntensityOut || !FrequencyOut || !IntensityIn || !FrequencyIn)
         {
             Debug.LogError("One or multiple field unset in UIManager");
 #if UNITY_EDITOR
@@ -62,59 +76,65 @@ public class UIManager : MonoBehaviour
             Application.Quit();
         }
 
+        Physics = FindFirstObjectByType<PhysicSimulation>();
+
         StartButton.GetComponent<Button>().onClick.AddListener(OnStartTask);
         PauseButton.GetComponent<Button>().onClick.AddListener(OnPauseTask);
         ResetButton.GetComponent<Button>().onClick.AddListener(OnResetTask);
 
         PauseButton.gameObject.SetActive(false);
         ResetButton.gameObject.SetActive(false);
+
+        PauseText = PauseButton.transform.Find("Text (TMP)").GetComponent<TMP_Text>();
     }
 
     private void OnStartTask()
     {
-        if (FrequenceInputField.text.Length == 0 || TruckSpeedInputField.text.Length == 0 ||
+        if (FrequencyInputField.text.Length == 0 || TruckSpeedInputField.text.Length == 0 ||
             ImpedanceInputField.text.Length == 0 || PowerInputField.text.Length == 0)
         {
             Debug.Log("Cannot start with values empty");
             return;
         }
 
-        _start = true;
+        bStart = true;
+
+        Physics.PreCalculus();
 
         SwitchButtons();
 
-        FrequenceInputField.interactable = TruckSpeedInputField.interactable =
+        FrequencyInputField.interactable = TruckSpeedInputField.interactable =
             ImpedanceInputField.interactable = PowerInputField.interactable = false;
     }
 
     private void OnPauseTask()
     {
-        if (!_paused)
+        if (!bPaused)
         {
-            _paused = true;
-            PauseButton.transform.Find("Text (TMP)").GetComponentInChildren<TMP_Text>().text = "Unpause";
+            bPaused = true;
+            PauseText.text = "Unpause";
         }
         else
         {
-            _paused = false;
-            PauseButton.transform.Find("Text (TMP)").GetComponentInChildren<TMP_Text>().text = "Pause";
+            bPaused = false;
+            PauseText.text = "Pause";
         }
     }
 
     private void OnResetTask()
     {
-        FindFirstObjectByType<PhysicSimulation>().Reset();
+        Physics.Reset();
         Reset();
     }
 
     public void Reset()
     {
-        _start = _paused = false;
+        bStart = bPaused = false;
         PauseButton.transform.Find("Text (TMP)").GetComponentInChildren<TMP_Text>().text = "Pause";
 
         SwitchButtons();
 
-        FrequenceInputField.interactable = TruckSpeedInputField.interactable =
+        FrequencyInputField.interactable = TruckSpeedInputField.interactable =
             ImpedanceInputField.interactable = PowerInputField.interactable = true;
     }
 
@@ -125,11 +145,46 @@ public class UIManager : MonoBehaviour
         ResetButton.gameObject.SetActive(!ResetButton.gameObject.activeSelf);
     }
 
-    public float Frequence
+    public void SetIntensityText(float newInte, bool isOutside)
+    {
+        string newText = "Intensité reçue: " + newInte.ToString() + " dB";
+
+        if (isOutside)
+            IntensityOut.text = newText;
+        else
+            IntensityIn.text = newText;
+    }
+
+    public void SetFrequencyText(float newFreq, bool isOutside)
+    {
+        string newText = "Fréquence perçue: " + newFreq.ToString() + " Hz";
+
+        if (newFreq >= 2000)
+        {
+            if (newFreq >= 20000)
+                newText += " (Ultrason)";
+            else
+                newText += " (Aiguë)";
+        }
+        else if (newFreq <= 200)
+        {
+            if (newFreq <= 20)
+                newText += " (Infrason)";
+            else
+                newText += " (Grave)";
+        }
+
+        if (isOutside)
+            FrequencyOut.text = newText;
+        else
+            FrequencyIn.text = newText;
+    }
+
+    public float Frequency
     {
         get
         {
-            string input = FrequenceInputField.text.ToString();
+            string input = FrequencyInputField.text.ToString();
             return (float)(input.Length > 0 ? Convert.ToDouble(input) : 0);
         }
     }
@@ -161,13 +216,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public bool IsStarted
-    {
-        get => _start;
-    }
+    public bool IsStarted => bStart;
 
-    public bool IsPaused
-    {
-        get => _paused;
-    }
+    public bool IsPaused => bPaused;
 }
