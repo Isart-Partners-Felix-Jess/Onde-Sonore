@@ -61,6 +61,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text FrequencyIn = null;
 
+    [SerializeField] private TMP_Text WaveReverb = null;
+
     private bool bStart = false;
     private bool bPaused = false;
 
@@ -178,6 +180,28 @@ public class UIManager : MonoBehaviour
             FrequencyOut.text = newText;
         else
             FrequencyIn.text = newText;
+    }
+
+    private enum WaveReverbState : int
+    {
+        None = 0,
+        Phase = 1,
+        Opposition = 2
+    }
+
+    public void SetWaveRev(int waveRev)
+    {
+        string newText = "Onde réverbéré: ";
+
+        newText += waveRev switch
+        {
+            (int)WaveReverbState.None => "Non",
+            (int)WaveReverbState.Phase => "En Phase",
+            (int)WaveReverbState.Opposition => "En Opposition",
+            _ => "Error",
+        };
+
+        WaveReverb.text = newText;
     }
 
     public float Frequency
