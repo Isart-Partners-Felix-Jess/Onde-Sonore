@@ -56,8 +56,8 @@ public class PhysicSimulation : MonoBehaviour
             float deltaTime = Time.deltaTime;
             Movements(deltaTime);
 
-            //DistanceOutside = GetDistance(HumanOut, FireTruck);
-            //DistanceInside = GetDistance(HumanIn, FireTruck);
+            DistanceOutside = GetDistance(HumanOut, FireTruck);
+            DistanceInside = GetDistance(HumanIn, FireTruck);
 
             UIref.SetIntensityText(LevelHumanOutside(DistanceOutside), true);
             UIref.SetIntensityText(LevelHumanInside(DistanceInside), false);
@@ -109,7 +109,7 @@ public class PhysicSimulation : MonoBehaviour
 
     public void PreCalculus()
     {
-        DistanceOutside = DistanceInside = 100f;
+
         DopplerDifference = ComputeDopplerDifference();
         float sqrtReflexionCoef = (AirImpedance - UIref.Impedance) / (AirImpedance + UIref.Impedance);
         TransmissionCoef = 1f - (sqrtReflexionCoef * sqrtReflexionCoef); //Squared
