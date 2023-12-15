@@ -51,6 +51,11 @@ public class PhysicSimulation : MonoBehaviour
         FireTruck.transform.position += new Vector3(Time.deltaTime * UIref.TruckSpeed, 0f, 0f);
     }
 
+    private float GetDistance(SpriteRenderer obj1, SpriteRenderer obj2)
+    {
+        return (obj1.transform.position - obj2.transform.position).magnitude;
+    }
+
     public void Reset()
     {
         FireTruck.transform.position = FireTruckAtStart;
