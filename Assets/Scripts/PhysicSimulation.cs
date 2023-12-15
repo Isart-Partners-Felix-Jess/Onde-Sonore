@@ -4,7 +4,7 @@ using UnityEngine;
 public class PhysicSimulation : MonoBehaviour
 {
     private UIManager UIref;
-    private SineVisualisation SinVRef;
+    private SineVisualisation SineVRef;
 
     [Header("Assets")]
     [SerializeField] private Transform FireTruck = null;
@@ -26,6 +26,8 @@ public class PhysicSimulation : MonoBehaviour
     private float DistanceOutside;
     private float DistanceInside;
     private float DopplerDifference;
+
+    private UIManager.FrequencyDopplerState CurrentDopplerState;
 
     //Precalculated
     private float TransmissionCoef;
@@ -49,7 +51,7 @@ public class PhysicSimulation : MonoBehaviour
         }
 
         UIref = UIManager.Instance;
-        SinVRef = FindObjectOfType<SineVisualisation>();
+        SineVRef = FindObjectOfType<SineVisualisation>();
         FireTruckAtStart = FireTruck.transform.position;
     }
 
@@ -69,12 +71,12 @@ public class PhysicSimulation : MonoBehaviour
             //Here we Update it in real time
             SinusoidalAmplitude = Mathf.Sqrt(IntensityInside * AirImpedance);
             //Amplitude and frequency downscaled for visualisation
-            SinVRef.Draw(SinusoidalAmplitude * 0.01f, SinusoidalXCoef/* for precision here should be * 0.01f*/, SinusoidalTimeCoef * 0.01f);
+            SineVRef.Draw(SinusoidalAmplitude * 0.01f, SinusoidalXCoef /* for precision here should be * 0.01f*/, SinusoidalTimeCoef * 0.01f);
 
             UIref.SetIntensityText(IntensityOutside, true);
             UIref.SetIntensityText(IntensityInside, false);
-            UIref.SetFrequencyText(FrequencyHuman(HumanOut.position.x, DopplerDifference), true);
-            UIref.SetFrequencyText(FrequencyHuman(HumanIn.position.x, DopplerDifference), false);
+            UIref.SetFrequencyText(FrequencyHuman(HumanOut.position.x, DopplerDifference), CurrentDopplerState, true);
+            UIref.SetFrequencyText(FrequencyHuman(HumanIn.position.x, DopplerDifference), CurrentDopplerState, false);
 
             UIref.SetWaveRev(PhaseState());
 
@@ -101,18 +103,18 @@ public class PhysicSimulation : MonoBehaviour
         const float TOLERANCE = 0.5f;
         if (humanPositionX < FireTruck.position.x - TOLERANCE)
         {
-            //Plus aigu
+            CurrentDopplerState = UIManager.FrequencyDopplerState.High;
             return UIref.Frequency + DopplerDifference;
         }
         else if (humanPositionX > FireTruck.position.x + TOLERANCE)
         {
-            //Plus grave
+            CurrentDopplerState = UIManager.FrequencyDopplerState.Deep;
             return UIref.Frequency - DopplerDifference;
         }
         //RARE CASE
         else
         {
-            //Comme la source
+            CurrentDopplerState = UIManager.FrequencyDopplerState.Same;
             return UIref.Frequency;
         }
     }

@@ -159,7 +159,7 @@ public class UIManager : MonoBehaviour
 
     public enum FrequencyDopplerState : int
     {
-        None = 0,
+        Same = 0,
         Deep = 1,
         High = 2
     }
@@ -170,9 +170,9 @@ public class UIManager : MonoBehaviour
 
         newText += dopplerState switch
         {
-            FrequencyDopplerState.None => "",
-            FrequencyDopplerState.Deep => " (Aiguë)",
-            FrequencyDopplerState.High => " (Grave)",
+            FrequencyDopplerState.Same => " (Identique)",
+            FrequencyDopplerState.Deep => " (+ Aiguë  )",
+            FrequencyDopplerState.High => " (+ Grave  )",
             _ => "Error",
         };
 
