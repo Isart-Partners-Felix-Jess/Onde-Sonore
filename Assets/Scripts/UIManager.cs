@@ -157,24 +157,24 @@ public class UIManager : MonoBehaviour
             IntensityIn.text = newText;
     }
 
-    public void SetFrequencyText(float newFreq, bool isOutside)
+    public enum FrequencyDopplerState : int
+    {
+        None = 0,
+        Deep = 1,
+        High = 2
+    }
+
+    public void SetFrequencyText(float newFreq, FrequencyDopplerState dopplerState, bool isOutside)
     {
         string newText = "Fréquence perçue: " + newFreq.ToString() + " Hz";
 
-        if (newFreq >= 2000)
+        newText += dopplerState switch
         {
-            if (newFreq >= 20000)
-                newText += " (Ultrason)";
-            else
-                newText += " (Aiguë)";
-        }
-        else if (newFreq <= 200)
-        {
-            if (newFreq <= 20)
-                newText += " (Infrason)";
-            else
-                newText += " (Grave)";
-        }
+            FrequencyDopplerState.None => "",
+            FrequencyDopplerState.Deep => " (Aiguë)",
+            FrequencyDopplerState.High => " (Grave)",
+            _ => "Error",
+        };
 
         if (isOutside)
             FrequencyOut.text = newText;
@@ -182,22 +182,22 @@ public class UIManager : MonoBehaviour
             FrequencyIn.text = newText;
     }
 
-    private enum WaveReverbState : int
+    public enum WaveReverbState : int
     {
         None = 0,
         Phase = 1,
         Opposition = 2
     }
 
-    public void SetWaveRev(int waveRev)
+    public void SetWaveRev(WaveReverbState waveRev)
     {
         string newText = "Onde réverbéré: ";
 
         newText += waveRev switch
         {
-            (int)WaveReverbState.None => "Non",
-            (int)WaveReverbState.Phase => "En Phase",
-            (int)WaveReverbState.Opposition => "En Opposition",
+            WaveReverbState.None => "Non",
+            WaveReverbState.Phase => "En Phase",
+            WaveReverbState.Opposition => "En Opposition",
             _ => "Error",
         };
 
