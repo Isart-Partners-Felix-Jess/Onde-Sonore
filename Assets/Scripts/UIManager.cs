@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TMP_InputField TruckSpeedInputField = null;
 
-    [SerializeField] private TMP_InputField ImpedenceInputField = null;
+    [SerializeField] private TMP_InputField ImpedanceInputField = null;
 
     [SerializeField] private TMP_InputField PowerInputField = null;
 
@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        if (!FrequenceInputField || !TruckSpeedInputField || !ImpedenceInputField || !PowerInputField ||
+        if (!FrequenceInputField || !TruckSpeedInputField || !ImpedanceInputField || !PowerInputField ||
             !StartButton || !PauseButton || !ResetButton)
         {
             Debug.LogError("One or multiple field unset in UIManager");
@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
     private void OnStartTask()
     {
         if (FrequenceInputField.text.Length == 0 || TruckSpeedInputField.text.Length == 0 ||
-            ImpedenceInputField.text.Length == 0 || PowerInputField.text.Length == 0)
+            ImpedanceInputField.text.Length == 0 || PowerInputField.text.Length == 0)
         {
             Debug.Log("Cannot start with values empty");
             return;
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
         SwitchButtons();
 
         FrequenceInputField.interactable = TruckSpeedInputField.interactable =
-            ImpedenceInputField.interactable = PowerInputField.interactable = false;
+            ImpedanceInputField.interactable = PowerInputField.interactable = false;
     }
 
     private void OnPauseTask()
@@ -115,7 +115,7 @@ public class UIManager : MonoBehaviour
         SwitchButtons();
 
         FrequenceInputField.interactable = TruckSpeedInputField.interactable =
-            ImpedenceInputField.interactable = PowerInputField.interactable = true;
+            ImpedanceInputField.interactable = PowerInputField.interactable = true;
     }
 
     private void SwitchButtons()
@@ -143,11 +143,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public float Impedence
+    public float Impedance
     {
         get
         {
-            string input = ImpedenceInputField.text.ToString();
+            string input = ImpedanceInputField.text.ToString();
             return (float)(input.Length > 0 ? Convert.ToDouble(input) : 0);
         }
     }
