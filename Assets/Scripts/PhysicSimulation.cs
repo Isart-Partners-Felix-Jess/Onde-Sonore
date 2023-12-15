@@ -30,7 +30,9 @@ public class PhysicSimulation : MonoBehaviour
     private float TransmissionCoef;
 
     private float InvertedWaveLength;
-    private float SinusoidalXCoef;
+    public float SinusoidalXCoef { get; private set; }
+    public float SinusoidalTimeCoef { get; private set; }
+    public float SinusoidalAmplitude { get; private set; }
 
     private const float TAU = 2 * Mathf.PI;
 
@@ -59,9 +61,14 @@ public class PhysicSimulation : MonoBehaviour
             DistanceOutside = GetDistance(HumanOut, FireTruck);
             DistanceInside = GetDistance(HumanIn, FireTruck);
 
-            UIref.SetIntensityText(LevelHumanOutside(DistanceOutside), true);
-            UIref.SetIntensityText(LevelHumanInside(DistanceInside), false);
-
+            float IntensityInside = LevelHumanInside(DistanceInside);
+            float IntensityOutside = LevelHumanInside(DistanceOutside);
+            //Pressure gives the Amplitude
+            //Here we Update it in real time
+            SinusoidalAmplitude = Mathf.Sqrt(IntensityInside * AirImpedance);
+            
+            UIref.SetIntensityText(IntensityOutside, true);
+            UIref.SetIntensityText(IntensityInside, false);
             UIref.SetFrequencyText(FrequencyHuman(HumanOut.position.x, DopplerDifference), true);
             UIref.SetFrequencyText(FrequencyHuman(HumanIn.position.x, DopplerDifference), false);
 
@@ -86,12 +93,18 @@ public class PhysicSimulation : MonoBehaviour
     private float FrequencyHuman(float humanPositionX, float DopplerDifference)
     {
         if (humanPositionX < FireTruck.position.x)
+        {
             return UIref.Frequency + DopplerDifference;
+        }
         else if (humanPositionX > FireTruck.position.x)
+        {
             return UIref.Frequency - DopplerDifference;
+        }
         //RARE CASE ==
         else
+        {
             return UIref.Frequency;
+        }
     }
 
     private double ReceveivedIntensity(float distance)
@@ -115,6 +128,7 @@ public class PhysicSimulation : MonoBehaviour
         TransmissionCoef = 1f - (sqrtReflexionCoef * sqrtReflexionCoef); //Squared
         InvertedWaveLength = UIref.Frequency / SoundSpeed;
         SinusoidalXCoef = TAU * InvertedWaveLength;
+        SinusoidalTimeCoef = TAU * UIref.Frequency;
     }
 
     private float ComputeDopplerDifference()
