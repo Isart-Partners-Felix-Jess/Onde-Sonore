@@ -9,7 +9,7 @@ public class SineVisualisation : MonoBehaviour
 
     [SerializeField] private int Points = 200;
 
-    [SerializeField] private Vector2 Limits = new(0, 100);
+    [SerializeField] private Vector2 Limits = new(0, 8);
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class SineVisualisation : MonoBehaviour
         }
     }
 
-    public void Draw(float Amplitude, float SinusoidalXCoef,float SinusoidalTimeCoef)
+    public void Draw(float Amplitude, float XCoef,float TimeCoef)
     {
         float xStart = Limits.x;
         float xFinish = Limits.y;
@@ -33,7 +33,7 @@ public class SineVisualisation : MonoBehaviour
         {
             float progress = (float)currentPoint / (Points - 1);
             float x = Mathf.Lerp(xStart, xFinish, progress);
-            float y = Amplitude * Mathf.Sin((SinusoidalXCoef * x) + (Time.timeSinceLevelLoad * SinusoidalTimeCoef));
+            float y = Amplitude * Mathf.Sin((XCoef * x) + (Time.timeSinceLevelLoad * TimeCoef));
             LineRender.SetPosition(currentPoint, new Vector3(x, y, 0));
         }
     }

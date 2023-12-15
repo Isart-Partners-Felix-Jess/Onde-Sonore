@@ -132,6 +132,7 @@ public class PhysicSimulation : MonoBehaviour
         return result;
     }
 
+    //Here for the values that won't change during simulation
     public void PreCalculus()
     {
         DopplerDifference = ComputeDopplerDifference();
@@ -142,6 +143,7 @@ public class PhysicSimulation : MonoBehaviour
         SinusoidalTimeCoef = TAU * UIref.Frequency;
     }
 
+    //Wether the reverbed wave enters a state of phase or opposition of phase with the incidental one
     private UIManager.WaveReverbState PhaseState()
     {
         const float TOLERANCE = 0.1f; //10% to be easy to see
