@@ -5,6 +5,18 @@
 L'objectif de ce TP est de mettre en pratique les phénomènes acoustiques tels que la 
 propagation sonore, la réflexion, l’interférence, et l’effet Doppler.
 
+## Étude
+### Niveau sonore (Question 6 du TP)
+
+~~~
+Seuls les paramètres d'impédance de la fenêtre (et de l'air, constant dans notre modèle) et de la puissance de la source influe sur le volume perçu (le volume varie évidemment avec la distance).
+Les paramètres de fréquence de la source et de vitesse du véhicule (par effet Doppler), feront varier la fréquence perçue.
+~~~
+### Interférence (Question 8 du TP)
+~~~
+Avec le déplacement du véhicule, l'onde réfléchie sur la fenêtre entre en phase et en opposition de phase régulièrement.
+C'est logique, puisque la distance entre la source et la fenêtre devient périodiquement un multiple de la longueur d'onde.
+~~~
 ## Features
 
 Choix de :
