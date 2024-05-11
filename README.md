@@ -1,5 +1,5 @@
 # TP Ondes Sonore
-
+<a href="https://www.isart.fr/"><img width="255" height="255" src = "https://pbs.twimg.com/profile_images/1554747272897990659/vh39_Bj2_400x400.jpg"></a>
 ## Objectifs
 
 L'objectif de ce TP est de mettre en pratique les phénomènes acoustiques tels que la 
@@ -51,9 +51,9 @@ la vitesse de l'onde perçue n'est pas affectée par la vitesse du véhicule)
 
 ## Images
 
-![SC1](https://cdn.discordapp.com/attachments/1025360714791125082/1185280528983789598/image.png)
-![SC2](https://cdn.discordapp.com/attachments/1025360714791125082/1185279716442251366/image.png)
+![SC1](Screenshots/screen1.png)
+![SC2](Screenshots/screen2.png)
 
 ## Ecrit par
 - <a href = "mailto: f.becaud@student.isartdigital.com">Félix Becaud</a>
-- <a href = "mailto: j.perrochaud@student.isartdigital.com">Jessica Perrochaud</a>
+- <a href = "mailto: jessicaperrochaud@gmail.com">Jessica Perrochaud</a>
