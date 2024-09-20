@@ -45,7 +45,7 @@ Valeurs conseillées :
 
 Approximations :
 - ON NE NÉGLIGE PAS LA VITESSE DU VEHICULE POUR L'EFFET DOPPLER
-- La phase a une tolérence de 10% pour une visualisation facile 
+- La phase a une tolérance de 10% pour une visualisation facile 
 - A 50cm du camion on néglige l'effet Doppler (à l'instant où le camion passe devant l'observateur, 
 la vitesse de l'onde perçue n'est pas affectée par la vitesse du véhicule)
 
